@@ -1,9 +1,10 @@
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 import React, { useContext } from 'react'
 import { colors, commonStyles } from '../helper/helper'
 import { Context } from '../helper/context'
 
 export default function Settings() {
+  // Use React Context to communicate theme change to all the components.
   const { theme, toggleTheme } = useContext(Context);
 
   return (

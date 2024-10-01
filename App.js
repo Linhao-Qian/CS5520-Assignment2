@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator  } from '@react-navigation/native-stack';
 import AddAnActivity from './Screens/AddAnActivity';
@@ -14,6 +14,7 @@ export default function App() {
     <ContextProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerStyle: commonStyles.navigatorBackground, headerTintColor: colors.white }}>
+          {/* a bottom tab navigator Home is nested inside a native stack navigator */}
           <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
           <Stack.Screen name='AddAnActivity' component={AddAnActivity} options={{ title: 'Add An Activity'}} />
           <Stack.Screen name='AddADietEntry' component={AddADietEntry} options={{ title: 'Add A Diet Entry'}} />
@@ -23,11 +24,4 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styles = StyleSheet.create({});

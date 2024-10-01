@@ -1,4 +1,4 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, Button, StyleSheet, TextInput, View } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { commonStyles } from '../helper/helper'
 import { Context } from '../helper/context';
@@ -26,6 +26,7 @@ export default function AddAnActivity({navigation}) {
   }
 
   const handleSave = () => {
+    // validate the inputs
     if (!activity || !date || !duration || isNaN(duration) || Number(duration) < 0) {
       Alert.alert('Invalid input', 'Please fill the fields correctly.');
       return;
@@ -72,6 +73,7 @@ export default function AddAnActivity({navigation}) {
           onPressOut={handlePressOut}
           onBlur={() => setIsCalendarShow(false)}
         />
+        {/* Give the component DateTimePicker a constant height so that its height does not collapse even when it is not visible. */}
         <View style={{ height: 240}}>
           {isCalendarShow && <DateTimePicker
             value={date || new Date()}

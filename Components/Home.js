@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Activities from '../Screens/Activities';
@@ -9,14 +9,17 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const Tab = createBottomTabNavigator();
 
+// Home is a bottom tab navigator 
 export default function Home({navigation}) {
   return (
-    <Tab.Navigator screenOptions={{
-        headerStyle: commonStyles.navigatorBackground,
-        headerTintColor: colors.white,
-        tabBarStyle: commonStyles.navigatorBackground,
-        tabBarActiveTintColor: colors.yellow,
-    }}>
+    <Tab.Navigator
+        screenOptions={{
+            headerStyle: commonStyles.navigatorBackground,
+            headerTintColor: colors.white,
+            tabBarStyle: commonStyles.navigatorBackground,
+            tabBarActiveTintColor: colors.yellow,
+        }}
+    >
       <Tab.Screen
         name="Activities"
         component={Activities}

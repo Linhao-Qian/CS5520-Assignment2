@@ -1,4 +1,4 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, Button, StyleSheet, TextInput, View } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { commonStyles } from '../helper/helper'
 import { Context } from '../helper/context';
@@ -24,13 +24,14 @@ export default function AddADietEntry({navigation}) {
   }
 
   const handleSave = () => {
+    // validate the inputs
     if (!description || !date || !calories || isNaN(calories) || Number(calories) < 0) {
       Alert.alert('Invalid input', 'Please fill the fields correctly.');
       return;
     }
     addADietEntry({
       name: description,
-      value: calories,
+      value: Number(calories),
       date: date.toString().slice(0, 15),
       isSpecial: Number(calories) > 800,
     });

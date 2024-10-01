@@ -20,6 +20,4 @@ export default function Item({item: {name, value, date, isSpecial}}) {
   )
 }
 
-const styles = StyleSheet.create({
-    
-})
+const styles = StyleSheet.create({})

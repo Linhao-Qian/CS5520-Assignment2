@@ -2,6 +2,7 @@ import { createContext, useState } from "react";
 
 export const Context = createContext();
 
+// Use React Context to communicate changes to all the components.
 export const ContextProvider = ({children}) => {
     const [theme, setTheme] = useState('light');
     const [activities, setActivities] = useState([]);
