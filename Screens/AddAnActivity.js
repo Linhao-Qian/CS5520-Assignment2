@@ -42,7 +42,7 @@ export default function AddAnActivity({navigation}) {
 
   return (
     <View style={[commonStyles.centerContainer, commonStyles[theme], commonStyles.content]}>
-      <View style={{zIndex: 1000}}>
+      <View style={commonStyles.activity}>
         <FormItem label='Activity *'>
           <DropDownPicker
             style={commonStyles.formItem}
@@ -74,7 +74,7 @@ export default function AddAnActivity({navigation}) {
           onBlur={() => setIsCalendarShow(false)}
         />
         {/* Give the component DateTimePicker a constant height so that its height does not collapse even when it is not visible. */}
-        <View style={{ height: 240}}>
+        <View style={commonStyles.dateTimePicker}>
           {isCalendarShow && <DateTimePicker
             value={date || new Date()}
             onChange={(event, selectedDate) => {

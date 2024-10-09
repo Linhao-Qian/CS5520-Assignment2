@@ -40,7 +40,7 @@ export const commonStyles = StyleSheet.create({
     },
     buttonGroup: {
         position: 'absolute',
-        bottom: 160,
+        bottom: 120,
         flexDirection: 'row',
         gap: 80,
     },
@@ -100,5 +100,14 @@ export const commonStyles = StyleSheet.create({
         alignItems: 'center',
         height: 30,
         gap: 10,
+    },
+    description: {
+        height: 100,
+    },
+    dateTimePicker: {
+        height: 200,
+    },
+    activity: {
+        zIndex: 1000,
     },
 })

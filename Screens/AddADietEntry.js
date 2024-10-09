@@ -42,7 +42,7 @@ export default function AddADietEntry({navigation}) {
     <View style={[commonStyles.centerContainer, commonStyles[theme], commonStyles.content]}>
       <FormItem label='Description *'>
         <TextInput
-          style={[commonStyles.formItem, commonStyles.input, styles.description]}
+          style={[commonStyles.formItem, commonStyles.input, commonStyles.description]}
           value={description}
           multiline={true}
           onChangeText={newDescription => setDescription(newDescription)}
@@ -63,7 +63,7 @@ export default function AddADietEntry({navigation}) {
           onPressOut={handlePressOut}
           onBlur={() => setIsCalendarShow(false)}
         />
-        <View style={{ height: 240}}>
+        <View style={commonStyles.dateTimePicker}>
           {isCalendarShow && <DateTimePicker
             value={date || new Date()}
             onChange={(event, selectedDate) => {
@@ -82,8 +82,4 @@ export default function AddADietEntry({navigation}) {
   )
 }
 
-const styles = StyleSheet.create({
-    description: {
-        height: 100,
-    }
-})
+const styles = StyleSheet.create({})
