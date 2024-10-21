@@ -1,20 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator  } from '@react-navigation/native-stack';
+import AddAnActivity from './Screens/AddAnActivity';
+import AddADietEntry from './Screens/AddADietEntry';
+import Home from './Components/Home';
+import { colors, commonStyles } from './helper/helper';
+import { ContextProvider } from './helper/context';
+
+const Stack = createNativeStackNavigator ();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ContextProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerStyle: commonStyles.navigatorBackground, headerTintColor: colors.white }}>
+          {/* a bottom tab navigator Home is nested inside a native stack navigator */}
+          <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
+          <Stack.Screen name='AddAnActivity' component={AddAnActivity} options={{ title: 'Add An Activity'}} />
+          <Stack.Screen name='AddADietEntry' component={AddADietEntry} options={{ title: 'Add A Diet Entry'}} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ContextProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styles = StyleSheet.create({});
