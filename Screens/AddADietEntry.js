@@ -1,16 +1,52 @@
-import { Alert, Button, StyleSheet, TextInput, View } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import { commonStyles } from '../helper/helper'
 import { Context } from '../helper/context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FormItem from '../Components/FormItem';
+import { deleteFromDB, updateInDB, writeToDB } from '../Firebase/firestoreHelper';
+import Checkbox from 'expo-checkbox';
+import PressableButton from '../Components/PressableButton';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
-export default function AddADietEntry({navigation}) {
-  const { theme, addADietEntry } = useContext(Context);
+export default function AddADietEntry({navigation, route}) {
+  const { theme } = useContext(Context);
   const [isCalendarShow, setIsCalendarShow] = useState(false);
-  const [description, setDescription] = useState();
-  const [calories, setCalories] = useState();
-  const [date, setDate] = useState();
+  const [description, setDescription] = useState(route.params?.item.name);
+  const [calories, setCalories] = useState(route.params?.item.value.toString());
+  const [date, setDate] = useState(route.params?.item.date);
+  const [isApproved, setIsApproved] = useState(route.params?.item?.isApproved);
+  const collectionName = 'diet';
+  
+  useEffect(() => {
+    if (route.params?.item) {
+      navigation.setOptions({
+        headerRight: () =>
+          <Pressable
+            android_ripple={{color: 'white', radius: 20}}
+            style={({pressed}) => [commonStyles.headerIcons, pressed && commonStyles.pressedStyle]}
+            onPress={handleDelete}
+          >
+            <AntDesign name="delete" size={24} color="white" />
+          </Pressable>,
+      })
+    }
+  }, [])
+
+  const handleDelete = () => {
+    Alert.alert("Delete", "Are you sure you want to delete this item?", [
+      {
+        text: "No",
+      },
+      {
+        text: "Yes",
+        onPress: () => {
+          deleteFromDB(route.params?.item.id, collectionName);
+          navigation.goBack();
+        },
+      },
+    ])
+  }
 
   const handlePressOut = () => {
     if (!isCalendarShow && !date) {
@@ -23,19 +59,40 @@ export default function AddADietEntry({navigation}) {
     navigation.goBack();
   }
 
+  const handleSaveChanges = (data, id) => {
+    updateInDB(data, id, collectionName);
+    navigation.goBack();
+  }
+
   const handleSave = () => {
     // validate the inputs
     if (!description || !date || !calories || isNaN(calories) || Number(calories) < 0) {
       Alert.alert('Invalid input', 'Please fill the fields correctly.');
       return;
     }
-    addADietEntry({
+    const data = {
       name: description,
       value: Number(calories),
       date: date.toString().slice(0, 15),
       isSpecial: Number(calories) > 800,
-    });
-    navigation.goBack();
+    }
+    if (data.isSpecial) {
+      data.isApproved = !!isApproved;
+    }
+    if (route.params?.item) {
+      Alert.alert("Important", "Are you sure you want to save these changes?", [
+        {
+          text: "No",
+        },
+        {
+          text: "Yes",
+          onPress: () => handleSaveChanges(data, route.params?.item.id),
+        },
+      ])
+    } else {
+      writeToDB(data, collectionName);
+      navigation.goBack();
+    }
   }
 
   return (
@@ -74,9 +131,17 @@ export default function AddADietEntry({navigation}) {
           />}
         </View>
       </FormItem>
-      {!isCalendarShow && <View style={commonStyles.buttonGroup}>
-        <Button title='Cancel' onPress={handleCancel} />
-        <Button title='Save' onPress={handleSave} />
+      {!isCalendarShow && 
+      <View style={commonStyles.bottomGroup}>
+        {route.params?.item.isSpecial &&
+        <View style={commonStyles.checkbox}>
+          <Text style={commonStyles.checkboxText}>This item is marked as special. Select the checkbox if you would like to approve it.</Text>
+          <Checkbox value={isApproved} onValueChange={setIsApproved} />
+        </View>}
+        <View style={commonStyles.buttonGroup}>
+          <PressableButton pressedFunction={handleCancel} title="Cancel" componentStyle={commonStyles.cancelButtonStyle} />
+          <PressableButton pressedFunction={handleSave} title="Save" />
+        </View>
       </View>}
     </View>
   )

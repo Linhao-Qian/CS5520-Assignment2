@@ -1,7 +1,8 @@
-import { Button, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useContext } from 'react'
-import { colors, commonStyles } from '../helper/helper'
+import { commonStyles } from '../helper/helper'
 import { Context } from '../helper/context'
+import PressableButton from '../Components/PressableButton';
 
 export default function Settings() {
   // Use React Context to communicate theme change to all the components.
@@ -9,10 +10,10 @@ export default function Settings() {
 
   return (
     <View style={[commonStyles.centerContainer, commonStyles[theme]]}>
-      <Button
+      <PressableButton
+        pressedFunction={toggleTheme}
         title='Toggle Theme'
-        onPress={toggleTheme}
-        color={theme === 'light' ? colors.bluishViolet : colors.light}
+        componentStyle={commonStyles.lightText}
       />
     </View>
   )

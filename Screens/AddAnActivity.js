@@ -1,18 +1,54 @@
-import { Alert, Button, StyleSheet, TextInput, View } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import { commonStyles } from '../helper/helper'
 import { Context } from '../helper/context';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FormItem from '../Components/FormItem';
+import { deleteFromDB, updateInDB, writeToDB } from '../Firebase/firestoreHelper';
+import Checkbox from 'expo-checkbox';
+import PressableButton from '../Components/PressableButton';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
-export default function AddAnActivity({navigation}) {
-  const { theme, addAnActivity } = useContext(Context);
+export default function AddAnActivity({navigation, route}) {
+  const { theme } = useContext(Context);
   const [dropDownPickerOpen, setDropDownPickerOpen] = useState(false);
   const [isCalendarShow, setIsCalendarShow] = useState(false);
-  const [activity, setActivity] = useState();
-  const [duration, setDuration] = useState();
-  const [date, setDate] = useState();
+  const [activity, setActivity] = useState(route.params?.item.name);
+  const [duration, setDuration] = useState(route.params?.item && Number(route.params.item.value.split(' ')[0]).toString());
+  const [date, setDate] = useState(route.params?.item.date);
+  const [isApproved, setIsApproved] = useState(route.params?.item?.isApproved);
+  const collectionName = 'activities';
+
+  useEffect(() => {
+    if (route.params?.item) {
+      navigation.setOptions({
+        headerRight: () =>
+          <Pressable
+            android_ripple={{color: 'white', radius: 20}}
+            style={({pressed}) => [commonStyles.headerIcons, pressed && commonStyles.pressedStyle]}
+            onPress={handleDelete}
+          >
+            <AntDesign name="delete" size={24} color="white" />
+          </Pressable>,
+      })
+    }
+  }, [])
+
+  const handleDelete = () => {
+    Alert.alert("Delete", "Are you sure you want to delete this item?", [
+      {
+        text: "No",
+      },
+      {
+        text: "Yes",
+        onPress: () => {
+          deleteFromDB(route.params?.item.id, collectionName);
+          navigation.goBack();
+        },
+      },
+    ])
+  }
 
   const handlePressOut = () => {
     if (!isCalendarShow && !date) {
@@ -25,19 +61,40 @@ export default function AddAnActivity({navigation}) {
     navigation.goBack();
   }
 
+  const handleSaveChanges = (data, id) => {
+    updateInDB(data, id, collectionName);
+    navigation.goBack();
+  }
+
   const handleSave = () => {
     // validate the inputs
     if (!activity || !date || !duration || isNaN(duration) || Number(duration) < 0) {
       Alert.alert('Invalid input', 'Please fill the fields correctly.');
       return;
     }
-    addAnActivity({
+    const data = {
       name: activity,
       value: Number(duration) + ' min',
       date: date.toString().slice(0, 15),
       isSpecial: Number(duration) > 60 && (activity === 'Running' || activity === 'Weights'),
-    });
-    navigation.goBack();
+    }
+    if (data.isSpecial) {
+      data.isApproved = !!isApproved;
+    }
+    if (route.params?.item) {
+      Alert.alert("Important", "Are you sure you want to save these changes?", [
+        {
+          text: "No",
+        },
+        {
+          text: "Yes",
+          onPress: () => handleSaveChanges(data, route.params?.item.id),
+        },
+      ])
+    } else {
+      writeToDB(data, collectionName);
+      navigation.goBack();
+    }
   }
 
   return (
@@ -85,9 +142,17 @@ export default function AddAnActivity({navigation}) {
           />}
         </View>
       </FormItem>
-      {!isCalendarShow && <View style={commonStyles.buttonGroup}>
-        <Button title='Cancel' onPress={handleCancel} />
-        <Button title='Save' onPress={handleSave} />
+      {!isCalendarShow && 
+      <View style={commonStyles.bottomGroup}>
+        {route.params?.item.isSpecial &&
+        <View style={commonStyles.checkbox}>
+          <Text style={commonStyles.checkboxText}>This item is marked as special. Select the checkbox if you would like to approve it.</Text>
+          <Checkbox value={isApproved} onValueChange={setIsApproved} />
+        </View>}
+        <View style={commonStyles.buttonGroup}>
+          <PressableButton pressedFunction={handleCancel} title="Cancel" componentStyle={commonStyles.cancelButtonStyle} />
+          <PressableButton pressedFunction={handleSave} title="Save" />
+        </View>
       </View>}
     </View>
   )

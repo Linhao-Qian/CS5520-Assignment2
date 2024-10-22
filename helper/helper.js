@@ -9,6 +9,8 @@ export const colors = {
     black: '#000',
     white: '#fff',
     grey: '#ddd',
+    blue: '#363678',
+    red: '#9b095c',
 }
 
 export const commonStyles = StyleSheet.create({
@@ -38,11 +40,24 @@ export const commonStyles = StyleSheet.create({
         color: colors.bluishViolet,
         fontSize: 16,
     },
-    buttonGroup: {
+    bottomGroup: {
         position: 'absolute',
         bottom: 120,
+    },
+    checkbox: {
         flexDirection: 'row',
-        gap: 80,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        marginVertical: 20,
+        gap: 20,
+    },
+    checkboxText: {
+        fontWeight: 'bold',
+        maxWidth: 300,
+    },
+    buttonGroup: {
+        flexDirection: 'row',
+        gap: 20,
     },
     light: {
         backgroundColor: colors.light,
@@ -109,5 +124,24 @@ export const commonStyles = StyleSheet.create({
     },
     activity: {
         zIndex: 1000,
+    },
+    headerIcons: {
+        flexDirection: 'row',
+        marginRight: 16,
+    },
+    pressedStyle: {
+        backgroundColor: 'white',
+        opacity: 0.5,
+    },
+    defaultButtonStyle: {
+        backgroundColor: colors.blue,
+        width: 160,
+        height: 36,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 5,
+    },
+    cancelButtonStyle: {
+        backgroundColor: colors.red,
     },
 })
