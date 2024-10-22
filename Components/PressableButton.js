@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text } from "react-native";
 import React from "react";
 import { commonStyles } from "../helper/helper";
 
+// Implement a reusable Button component that can be used in multiple screens.
 export default function PressableButton({title, pressedFunction, componentStyle, pressedStyle, titleStyle}) {
   return (
     <Pressable

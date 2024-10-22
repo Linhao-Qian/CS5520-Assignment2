@@ -79,6 +79,7 @@ export default function AddADietEntry({navigation, route}) {
     if (data.isSpecial) {
       data.isApproved = !!isApproved;
     }
+    // If the item is being edited, ask for confirmation before saving changes.
     if (route.params?.item) {
       Alert.alert("Important", "Are you sure you want to save these changes?", [
         {
