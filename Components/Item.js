@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 export default function Item({item, type}) {
   const navigation = useNavigation();
   const {name, value, date, isSpecial} = item;
-  
+
   return (
     <Pressable
       android_ripple={{color: 'white', radius: 20}}
@@ -18,7 +18,7 @@ export default function Item({item, type}) {
       <View style={commonStyles.itemRight}>
         {isSpecial && !item.isApproved && <Ionicons name="warning" size={24} color={colors.yellow} />}
         <View style={commonStyles.textContainer}>
-            <Text style={commonStyles.itemText}>{date}</Text>
+            <Text style={commonStyles.itemText}>{new Date(date).toString().slice(0, 15)}</Text>
         </View>
         <View style={commonStyles.textContainer}>
             <Text style={commonStyles.itemText}>{value}</Text>

@@ -47,7 +47,7 @@ export const commonStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        marginVertical: 20,
+        marginVertical: 8,
         gap: 20,
     },
     checkboxText: {

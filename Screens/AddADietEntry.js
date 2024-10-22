@@ -7,14 +7,14 @@ import FormItem from '../Components/FormItem';
 import { deleteFromDB, updateInDB, writeToDB } from '../Firebase/firestoreHelper';
 import Checkbox from 'expo-checkbox';
 import PressableButton from '../Components/PressableButton';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function AddADietEntry({navigation, route}) {
   const { theme } = useContext(Context);
   const [isCalendarShow, setIsCalendarShow] = useState(false);
   const [description, setDescription] = useState(route.params?.item.name);
   const [calories, setCalories] = useState(route.params?.item.value.toString());
-  const [date, setDate] = useState(route.params?.item.date);
+  const [date, setDate] = useState(route.params?.item ? new Date(route.params.item.date) : null);
   const [isApproved, setIsApproved] = useState(route.params?.item?.isApproved);
   const collectionName = 'diet';
   
@@ -27,7 +27,7 @@ export default function AddADietEntry({navigation, route}) {
             style={({pressed}) => [commonStyles.headerIcons, pressed && commonStyles.pressedStyle]}
             onPress={handleDelete}
           >
-            <AntDesign name="delete" size={24} color="white" />
+            <Ionicons name="trash" size={24} color="white" />
           </Pressable>,
       })
     }
@@ -73,7 +73,7 @@ export default function AddADietEntry({navigation, route}) {
     const data = {
       name: description,
       value: Number(calories),
-      date: date.toString().slice(0, 15),
+      date: date.getTime(),
       isSpecial: Number(calories) > 800,
     }
     if (data.isSpecial) {

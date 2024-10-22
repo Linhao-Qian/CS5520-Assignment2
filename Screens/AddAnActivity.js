@@ -8,7 +8,7 @@ import FormItem from '../Components/FormItem';
 import { deleteFromDB, updateInDB, writeToDB } from '../Firebase/firestoreHelper';
 import Checkbox from 'expo-checkbox';
 import PressableButton from '../Components/PressableButton';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function AddAnActivity({navigation, route}) {
   const { theme } = useContext(Context);
@@ -16,7 +16,7 @@ export default function AddAnActivity({navigation, route}) {
   const [isCalendarShow, setIsCalendarShow] = useState(false);
   const [activity, setActivity] = useState(route.params?.item.name);
   const [duration, setDuration] = useState(route.params?.item && Number(route.params.item.value.split(' ')[0]).toString());
-  const [date, setDate] = useState(route.params?.item.date);
+  const [date, setDate] = useState(route.params?.item ? new Date(route.params.item.date) : null);
   const [isApproved, setIsApproved] = useState(route.params?.item?.isApproved);
   const collectionName = 'activities';
 
@@ -29,7 +29,7 @@ export default function AddAnActivity({navigation, route}) {
             style={({pressed}) => [commonStyles.headerIcons, pressed && commonStyles.pressedStyle]}
             onPress={handleDelete}
           >
-            <AntDesign name="delete" size={24} color="white" />
+            <Ionicons name="trash" size={24} color="white" />
           </Pressable>,
       })
     }
@@ -75,7 +75,7 @@ export default function AddAnActivity({navigation, route}) {
     const data = {
       name: activity,
       value: Number(duration) + ' min',
-      date: date.toString().slice(0, 15),
+      date: date.getTime(),
       isSpecial: Number(duration) > 60 && (activity === 'Running' || activity === 'Weights'),
     }
     if (data.isSpecial) {
